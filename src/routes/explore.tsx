@@ -54,7 +54,7 @@ function ExplorePage() {
 
   function applySearch(e: React.FormEvent) {
     e.preventDefault();
-    navigate({ search: (prev) => ({ ...prev, q: q || undefined }) });
+    navigate({ search: (prev: any) => ({ ...prev, q: q || undefined }) });
   }
 
   return (
