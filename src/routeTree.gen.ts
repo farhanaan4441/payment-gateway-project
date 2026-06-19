@@ -9,13 +9,49 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CategoriesRouteImport } from './routes/categories'
+import { Route as BecomeArtistRouteImport } from './routes/become-artist'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrdersIdRouteImport } from './routes/orders.$id'
+import { Route as CommissionsSlugRouteImport } from './routes/commissions.$slug'
+import { Route as ArtistCommissionsRouteImport } from './routes/artist.commissions'
+import { Route as OrdersIdCheckoutRouteImport } from './routes/orders.$id.checkout'
+import { Route as ArtistCommissionsNewRouteImport } from './routes/artist.commissions.new'
 
+const WalletRoute = WalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesRoute = CategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BecomeArtistRoute = BecomeArtistRouteImport.update({
+  id: '/become-artist',
+  path: '/become-artist',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -23,49 +59,198 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrdersIdRoute = OrdersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => OrdersRoute,
+} as any)
+const CommissionsSlugRoute = CommissionsSlugRouteImport.update({
+  id: '/commissions/$slug',
+  path: '/commissions/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistCommissionsRoute = ArtistCommissionsRouteImport.update({
+  id: '/artist/commissions',
+  path: '/artist/commissions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersIdCheckoutRoute = OrdersIdCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => OrdersIdRoute,
+} as any)
+const ArtistCommissionsNewRoute = ArtistCommissionsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ArtistCommissionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/become-artist': typeof BecomeArtistRoute
+  '/categories': typeof CategoriesRoute
+  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/orders': typeof OrdersRouteWithChildren
+  '/wallet': typeof WalletRoute
+  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
+  '/commissions/$slug': typeof CommissionsSlugRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
+  '/artist/commissions/new': typeof ArtistCommissionsNewRoute
+  '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/become-artist': typeof BecomeArtistRoute
+  '/categories': typeof CategoriesRoute
+  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/orders': typeof OrdersRouteWithChildren
+  '/wallet': typeof WalletRoute
+  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
+  '/commissions/$slug': typeof CommissionsSlugRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
+  '/artist/commissions/new': typeof ArtistCommissionsNewRoute
+  '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/become-artist': typeof BecomeArtistRoute
+  '/categories': typeof CategoriesRoute
+  '/dashboard': typeof DashboardRoute
   '/explore': typeof ExploreRoute
+  '/orders': typeof OrdersRouteWithChildren
+  '/wallet': typeof WalletRoute
+  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
+  '/commissions/$slug': typeof CommissionsSlugRoute
+  '/orders/$id': typeof OrdersIdRouteWithChildren
+  '/artist/commissions/new': typeof ArtistCommissionsNewRoute
+  '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/explore'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/become-artist'
+    | '/categories'
+    | '/dashboard'
+    | '/explore'
+    | '/orders'
+    | '/wallet'
+    | '/artist/commissions'
+    | '/commissions/$slug'
+    | '/orders/$id'
+    | '/artist/commissions/new'
+    | '/orders/$id/checkout'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/explore'
-  id: '__root__' | '/' | '/auth' | '/explore'
+  to:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/become-artist'
+    | '/categories'
+    | '/dashboard'
+    | '/explore'
+    | '/orders'
+    | '/wallet'
+    | '/artist/commissions'
+    | '/commissions/$slug'
+    | '/orders/$id'
+    | '/artist/commissions/new'
+    | '/orders/$id/checkout'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/become-artist'
+    | '/categories'
+    | '/dashboard'
+    | '/explore'
+    | '/orders'
+    | '/wallet'
+    | '/artist/commissions'
+    | '/commissions/$slug'
+    | '/orders/$id'
+    | '/artist/commissions/new'
+    | '/orders/$id/checkout'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  BecomeArtistRoute: typeof BecomeArtistRoute
+  CategoriesRoute: typeof CategoriesRoute
+  DashboardRoute: typeof DashboardRoute
   ExploreRoute: typeof ExploreRoute
+  OrdersRoute: typeof OrdersRouteWithChildren
+  WalletRoute: typeof WalletRoute
+  ArtistCommissionsRoute: typeof ArtistCommissionsRouteWithChildren
+  CommissionsSlugRoute: typeof CommissionsSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/wallet': {
+      id: '/wallet'
+      path: '/wallet'
+      fullPath: '/wallet'
+      preLoaderRoute: typeof WalletRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/explore': {
       id: '/explore'
       path: '/explore'
       fullPath: '/explore'
       preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories': {
+      id: '/categories'
+      path: '/categories'
+      fullPath: '/categories'
+      preLoaderRoute: typeof CategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/become-artist': {
+      id: '/become-artist'
+      path: '/become-artist'
+      fullPath: '/become-artist'
+      preLoaderRoute: typeof BecomeArtistRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -75,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,13 +274,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/orders/$id': {
+      id: '/orders/$id'
+      path: '/$id'
+      fullPath: '/orders/$id'
+      preLoaderRoute: typeof OrdersIdRouteImport
+      parentRoute: typeof OrdersRoute
+    }
+    '/commissions/$slug': {
+      id: '/commissions/$slug'
+      path: '/commissions/$slug'
+      fullPath: '/commissions/$slug'
+      preLoaderRoute: typeof CommissionsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist/commissions': {
+      id: '/artist/commissions'
+      path: '/artist/commissions'
+      fullPath: '/artist/commissions'
+      preLoaderRoute: typeof ArtistCommissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders/$id/checkout': {
+      id: '/orders/$id/checkout'
+      path: '/checkout'
+      fullPath: '/orders/$id/checkout'
+      preLoaderRoute: typeof OrdersIdCheckoutRouteImport
+      parentRoute: typeof OrdersIdRoute
+    }
+    '/artist/commissions/new': {
+      id: '/artist/commissions/new'
+      path: '/new'
+      fullPath: '/artist/commissions/new'
+      preLoaderRoute: typeof ArtistCommissionsNewRouteImport
+      parentRoute: typeof ArtistCommissionsRoute
+    }
   }
 }
 
+interface OrdersIdRouteChildren {
+  OrdersIdCheckoutRoute: typeof OrdersIdCheckoutRoute
+}
+
+const OrdersIdRouteChildren: OrdersIdRouteChildren = {
+  OrdersIdCheckoutRoute: OrdersIdCheckoutRoute,
+}
+
+const OrdersIdRouteWithChildren = OrdersIdRoute._addFileChildren(
+  OrdersIdRouteChildren,
+)
+
+interface OrdersRouteChildren {
+  OrdersIdRoute: typeof OrdersIdRouteWithChildren
+}
+
+const OrdersRouteChildren: OrdersRouteChildren = {
+  OrdersIdRoute: OrdersIdRouteWithChildren,
+}
+
+const OrdersRouteWithChildren =
+  OrdersRoute._addFileChildren(OrdersRouteChildren)
+
+interface ArtistCommissionsRouteChildren {
+  ArtistCommissionsNewRoute: typeof ArtistCommissionsNewRoute
+}
+
+const ArtistCommissionsRouteChildren: ArtistCommissionsRouteChildren = {
+  ArtistCommissionsNewRoute: ArtistCommissionsNewRoute,
+}
+
+const ArtistCommissionsRouteWithChildren =
+  ArtistCommissionsRoute._addFileChildren(ArtistCommissionsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  BecomeArtistRoute: BecomeArtistRoute,
+  CategoriesRoute: CategoriesRoute,
+  DashboardRoute: DashboardRoute,
   ExploreRoute: ExploreRoute,
+  OrdersRoute: OrdersRouteWithChildren,
+  WalletRoute: WalletRoute,
+  ArtistCommissionsRoute: ArtistCommissionsRouteWithChildren,
+  CommissionsSlugRoute: CommissionsSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
