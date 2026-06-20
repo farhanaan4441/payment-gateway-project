@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Send, CheckCircle2, AlertTriangle, Package, CreditCard } from "lucide-react";
 
 export const Route = createFileRoute("/orders/$id")({
-  head: () => ({ meta: [{ title: "Detail Pesanan — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Detail Pesanan — Rumah Commis" }] }),
   component: OrderDetail,
 });
 

@@ -85,10 +85,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ngommis-yok — Marketplace Komisi Seni Indonesia" },
+      { title: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
       { name: "description", content: "Tempat berkarya & berkomisi. Temukan seniman lokal terbaik untuk ilustrasi, chibi, portrait, logo, dan lainnya." },
-      { name: "author", content: "Ngommis-yok" },
-      { property: "og:title", content: "Ngommis-yok — Marketplace Komisi Seni Indonesia" },
+      { name: "author", content: "Rumah Commis" },
+      { property: "og:title", content: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
       { property: "og:description", content: "Pesan komisi seni dari artist Indonesia, aman dengan sistem escrow." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

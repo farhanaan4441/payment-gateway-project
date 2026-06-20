@@ -116,7 +116,7 @@ function SiteFooter() {
             <span className="grid place-items-center h-8 w-8 rounded-lg bg-primary text-primary-foreground">
               <Brush className="h-4 w-4" />
             </span>
-            <span className="font-display font-semibold">Ngommis-yok</span>
+            <span className="font-display font-semibold">Rumah Commis</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-xs">
             Marketplace komisi seni Indonesia. Pesan aman, artist sejahtera.
@@ -127,7 +127,7 @@ function SiteFooter() {
         <FooterCol title="Bantuan" items={[["FAQ", "/about"], ["Sengketa", "/about"], ["Kontak", "/about"]]} />
       </div>
       <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Ngommis-yok. Dibuat dengan ❤️ untuk seniman Indonesia.
+        © {new Date().getFullYear()} Rumah Commis. Dibuat dengan ❤️ untuk seniman Indonesia.
       </div>
     </footer>
   );

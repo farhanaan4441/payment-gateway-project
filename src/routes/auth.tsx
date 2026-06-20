@@ -17,7 +17,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Masuk / Daftar — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Masuk / Daftar — Rumah Commis" }] }),
   component: AuthPage,
 });
 
@@ -71,7 +71,7 @@ function AuthPage() {
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-primary via-primary/90 to-accent text-primary-foreground p-12">
         <Link to="/" className="flex items-center gap-2 font-display text-xl font-semibold">
-          <Brush className="h-6 w-6" /> Ngommis-yok
+          <Brush className="h-6 w-6" /> Rumah Commis
         </Link>
         <div>
           <h2 className="font-display text-4xl font-semibold leading-tight">
@@ -81,13 +81,13 @@ function AuthPage() {
             Bergabunglah dengan komunitas seniman & kolektor Indonesia.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/70">© Ngommis-yok</p>
+        <p className="text-sm text-primary-foreground/70">© Rumah Commis</p>
       </div>
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-sm">
           <div className="md:hidden mb-8">
             <Link to="/" className="inline-flex items-center gap-2 font-display text-xl font-semibold">
-              <Brush className="h-5 w-5 text-primary" /> Ngommis-yok
+              <Brush className="h-5 w-5 text-primary" /> Rumah Commis
             </Link>
           </div>
           <h1 className="font-display text-3xl font-semibold">{isSignUp ? "Daftar gratis" : "Masuk"}</h1>

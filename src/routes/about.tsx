@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ShieldCheck, Sparkles, Heart, MessageCircle } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "Tentang — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Tentang — Rumah Commis" }] }),
   component: About,
 });
 
@@ -12,9 +12,9 @@ function About() {
   return (
     <SiteShell>
       <div className="container mx-auto px-4 py-16 max-w-3xl">
-        <h1 className="font-display text-4xl md:text-5xl font-semibold">Tentang Ngommis-yok</h1>
+        <h1 className="font-display text-4xl md:text-5xl font-semibold">Tentang Rumah Commis</h1>
         <p className="text-lg text-muted-foreground mt-4">
-          Ngommis-yok adalah marketplace komisi seni Indonesia. Misi kami:
+          Rumah Commis adalah marketplace komisi seni Indonesia. Misi kami:
           membuat proses pesan-memesan komisi jadi <em className="font-display">aman, transparan, dan adil</em> —
           untuk seniman dan kolektor.
         </p>

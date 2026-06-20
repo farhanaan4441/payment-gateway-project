@@ -9,7 +9,7 @@ import { Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/orders")({
-  head: () => ({ meta: [{ title: "Pesanan — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Pesanan — Rumah Commis" }] }),
   component: OrdersPage,
 });
 

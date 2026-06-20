@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Wallet as WalletIcon } from "lucide-react";
 
 export const Route = createFileRoute("/wallet")({
-  head: () => ({ meta: [{ title: "Dompet — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Dompet — Rumah Commis" }] }),
   component: WalletPage,
 });
 

@@ -9,7 +9,7 @@ import { formatIDR, formatRelative } from "@/lib/format";
 import { ShoppingBag, Palette, Wallet, Plus, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Rumah Commis" }] }),
   component: Dashboard,
 });
 

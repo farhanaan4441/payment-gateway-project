@@ -10,9 +10,9 @@ import heroImage from "@/assets/hero-collage.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Ngommis-yok — Marketplace Komisi Seni Indonesia" },
+      { title: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
       { name: "description", content: "Tempat berkarya & berkomisi. Pesan ilustrasi, chibi, portrait, dan logo dari artist Indonesia — aman dengan sistem escrow." },
-      { property: "og:title", content: "Ngommis-yok — Marketplace Komisi Seni Indonesia" },
+      { property: "og:title", content: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
       { property: "og:description", content: "Marketplace komisi seni Indonesia. Pesan aman, artist sejahtera." },
     ],
   }),
@@ -181,7 +181,7 @@ function EmptyShowcase() {
     <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center">
       <Brush className="h-10 w-10 mx-auto text-primary/60 mb-3" />
       <p className="font-medium">Belum ada komisi yang ditampilkan.</p>
-      <p className="text-sm text-muted-foreground mt-1">Jadi artist pertama yang membuka komisi di Ngommis-yok!</p>
+      <p className="text-sm text-muted-foreground mt-1">Jadi artist pertama yang membuka komisi di Rumah Commis!</p>
       <Link to="/become-artist" className="inline-block mt-4">
         <Button>Mulai sebagai Artist</Button>
       </Link>
