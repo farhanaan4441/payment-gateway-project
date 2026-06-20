@@ -126,6 +126,23 @@ function AuthPage() {
             <GoogleIcon /> Lanjut dengan Google
           </Button>
 
+          {pendingVerification && (
+            <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+              <p className="font-medium text-foreground">Verifikasi email kamu</p>
+              <p className="text-muted-foreground mt-1">
+                Kami sudah mengirim link verifikasi ke <span className="font-medium text-foreground">{pendingVerification}</span>. Buka email dan klik link untuk mengaktifkan akun.
+              </p>
+              <button
+                type="button"
+                onClick={resendVerification}
+                disabled={resending}
+                className="text-primary font-medium hover:underline mt-2 disabled:opacity-50"
+              >
+                {resending ? "Mengirim…" : "Kirim ulang email verifikasi"}
+              </button>
+            </div>
+          )}
+
           <div className="flex items-center gap-3 my-5">
             <div className="h-px flex-1 bg-border" />
             <span className="text-xs text-muted-foreground">atau email</span>
