@@ -30,6 +30,8 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     if (user) navigate({ to: (redirect as any) ?? "/dashboard", replace: true });
@@ -44,21 +46,46 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin + "/dashboard",
+            emailRedirectTo: window.location.origin + "/auth",
             data: { display_name: name },
           },
         });
         if (error) throw error;
-        toast.success("Akun dibuat! Cek email jika diminta verifikasi.");
+        setPendingVerification(email);
+        toast.success("Akun dibuat — silakan cek email kamu untuk verifikasi.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message?.toLowerCase().includes("email not confirmed")) {
+            setPendingVerification(email);
+            throw new Error("Email kamu belum diverifikasi. Cek inbox atau kirim ulang link verifikasi di bawah.");
+          }
+          throw error;
+        }
         toast.success("Selamat datang kembali!");
       }
     } catch (err: any) {
       toast.error(err.message ?? "Terjadi kesalahan");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function resendVerification() {
+    if (!pendingVerification) return;
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingVerification,
+        options: { emailRedirectTo: window.location.origin + "/auth" },
+      });
+      if (error) throw error;
+      toast.success("Email verifikasi terkirim ulang. Cek inbox kamu.");
+    } catch (err: any) {
+      toast.error(err.message ?? "Gagal mengirim ulang");
+    } finally {
+      setResending(false);
     }
   }
 
