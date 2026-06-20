@@ -20,7 +20,7 @@ const METHODS = [
 ];
 
 export const Route = createFileRoute("/orders/$id/checkout")({
-  head: () => ({ meta: [{ title: "Pembayaran — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Pembayaran — Rumah Commis" }] }),
   component: CheckoutPage,
 });
 

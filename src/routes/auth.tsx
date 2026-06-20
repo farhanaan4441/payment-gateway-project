@@ -17,7 +17,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Masuk / Daftar — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Masuk / Daftar — Rumah Commis" }] }),
   component: AuthPage,
 });
 
@@ -30,6 +30,8 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     if (user) navigate({ to: (redirect as any) ?? "/dashboard", replace: true });
@@ -44,21 +46,46 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: window.location.origin + "/dashboard",
+            emailRedirectTo: window.location.origin + "/auth",
             data: { display_name: name },
           },
         });
         if (error) throw error;
-        toast.success("Akun dibuat! Cek email jika diminta verifikasi.");
+        setPendingVerification(email);
+        toast.success("Akun dibuat — silakan cek email kamu untuk verifikasi.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message?.toLowerCase().includes("email not confirmed")) {
+            setPendingVerification(email);
+            throw new Error("Email kamu belum diverifikasi. Cek inbox atau kirim ulang link verifikasi di bawah.");
+          }
+          throw error;
+        }
         toast.success("Selamat datang kembali!");
       }
     } catch (err: any) {
       toast.error(err.message ?? "Terjadi kesalahan");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function resendVerification() {
+    if (!pendingVerification) return;
+    setResending(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingVerification,
+        options: { emailRedirectTo: window.location.origin + "/auth" },
+      });
+      if (error) throw error;
+      toast.success("Email verifikasi terkirim ulang. Cek inbox kamu.");
+    } catch (err: any) {
+      toast.error(err.message ?? "Gagal mengirim ulang");
+    } finally {
+      setResending(false);
     }
   }
 
@@ -71,23 +98,23 @@ function AuthPage() {
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-primary via-primary/90 to-accent text-primary-foreground p-12">
         <Link to="/" className="flex items-center gap-2 font-display text-xl font-semibold">
-          <Brush className="h-6 w-6" /> Ngommis-yok
+          <Brush className="h-6 w-6" /> Rumah Commis
         </Link>
         <div>
           <h2 className="font-display text-4xl font-semibold leading-tight">
-            Berkarya. <br />Berkomisi. <br /><span className="italic">Bersama.</span>
+            Mau pesan gambar? <br />Ke <span className="italic">rumah commis</span> aja!
           </h2>
           <p className="mt-4 text-primary-foreground/90 max-w-md">
             Bergabunglah dengan komunitas seniman & kolektor Indonesia.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/70">© Ngommis-yok</p>
+        <p className="text-sm text-primary-foreground/70">© Rumah Commis</p>
       </div>
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-sm">
           <div className="md:hidden mb-8">
             <Link to="/" className="inline-flex items-center gap-2 font-display text-xl font-semibold">
-              <Brush className="h-5 w-5 text-primary" /> Ngommis-yok
+              <Brush className="h-5 w-5 text-primary" /> Rumah Commis
             </Link>
           </div>
           <h1 className="font-display text-3xl font-semibold">{isSignUp ? "Daftar gratis" : "Masuk"}</h1>
@@ -98,6 +125,23 @@ function AuthPage() {
           <Button variant="outline" className="w-full mt-6 h-11" onClick={googleSignIn}>
             <GoogleIcon /> Lanjut dengan Google
           </Button>
+
+          {pendingVerification && (
+            <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+              <p className="font-medium text-foreground">Verifikasi email kamu</p>
+              <p className="text-muted-foreground mt-1">
+                Kami sudah mengirim link verifikasi ke <span className="font-medium text-foreground">{pendingVerification}</span>. Buka email dan klik link untuk mengaktifkan akun.
+              </p>
+              <button
+                type="button"
+                onClick={resendVerification}
+                disabled={resending}
+                className="text-primary font-medium hover:underline mt-2 disabled:opacity-50"
+              >
+                {resending ? "Mengirim…" : "Kirim ulang email verifikasi"}
+              </button>
+            </div>
+          )}
 
           <div className="flex items-center gap-3 my-5">
             <div className="h-px flex-1 bg-border" />

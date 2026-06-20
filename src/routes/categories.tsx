@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Brush } from "lucide-react";
 
 export const Route = createFileRoute("/categories")({
-  head: () => ({ meta: [{ title: "Kategori — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Kategori — Rumah Commis" }] }),
   component: CategoriesPage,
 });
 

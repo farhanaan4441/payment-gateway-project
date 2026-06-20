@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Upload } from "lucide-react";
 
 export const Route = createFileRoute("/artist/commissions/new")({
-  head: () => ({ meta: [{ title: "Komisi Baru — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Komisi Baru — Rumah Commis" }] }),
   component: NewCommission,
 });
 

@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { Palette } from "lucide-react";
 
 export const Route = createFileRoute("/become-artist")({
-  head: () => ({ meta: [{ title: "Jadi Artist — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Jadi Artist — Rumah Commis" }] }),
   component: BecomeArtist,
 });
 
@@ -75,7 +75,7 @@ function BecomeArtist() {
           <div className="inline-grid place-items-center h-14 w-14 rounded-2xl bg-primary text-primary-foreground mb-4">
             <Palette className="h-7 w-7" />
           </div>
-          <h1 className="font-display text-3xl font-semibold">Jadi Artist di Ngommis-yok</h1>
+          <h1 className="font-display text-3xl font-semibold">Jadi Artist di Rumah Commis</h1>
           <p className="text-muted-foreground mt-2">Lengkapi profil artistmu untuk mulai menerima komisi.</p>
         </div>
 

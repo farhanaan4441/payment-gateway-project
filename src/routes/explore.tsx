@@ -15,7 +15,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/explore")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Jelajahi Komisi — Ngommis-yok" }] }),
+  head: () => ({ meta: [{ title: "Jelajahi Komisi — Rumah Commis" }] }),
   component: ExplorePage,
 });
 
