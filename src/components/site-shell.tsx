@@ -1,10 +1,11 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Brush, Compass, LayoutGrid, LogOut, MessageSquare, Wallet, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { AuthDialog } from "@/components/auth-dialog";
 
 const NAV = [
   { to: "/explore", label: "Jelajahi", icon: Compass },
@@ -26,6 +27,14 @@ function SiteHeader() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+
+  function openAuth(mode: "signin" | "signup") {
+    setAuthMode(mode);
+    setAuthOpen(true);
+    setOpen(false);
+  }
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -67,10 +76,8 @@ function SiteHeader() {
             </>
           ) : (
             <>
-              <Link to="/auth"><Button variant="ghost" size="sm">Masuk</Button></Link>
-              <Link to="/auth" search={{ mode: "signup" }}>
-                <Button size="sm">Daftar</Button>
-              </Link>
+              <Button variant="ghost" size="sm" onClick={() => openAuth("signin")}>Masuk</Button>
+              <Button size="sm" onClick={() => openAuth("signup")}>Daftar</Button>
             </>
           )}
         </div>
@@ -96,13 +103,14 @@ function SiteHeader() {
               </>
             ) : (
               <>
-                <Link to="/auth" onClick={() => setOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary">Masuk</Link>
-                <Link to="/auth" search={{ mode: "signup" }} onClick={() => setOpen(false)} className="px-3 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground">Daftar</Link>
+                <button onClick={() => openAuth("signin")} className="text-left px-3 py-2 rounded-md text-sm font-medium hover:bg-secondary">Masuk</button>
+                <button onClick={() => openAuth("signup")} className="text-left px-3 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground">Daftar</button>
               </>
             )}
           </div>
         </div>
       )}
+      <AuthDialog open={authOpen} onOpenChange={setAuthOpen} defaultMode={authMode} />
     </header>
   );
 }
