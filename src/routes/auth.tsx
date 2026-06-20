@@ -75,7 +75,7 @@ function AuthPage() {
         </Link>
         <div>
           <h2 className="font-display text-4xl font-semibold leading-tight">
-            Berkarya. <br />Berkomisi. <br /><span className="italic">Bersama.</span>
+            Mau pesan gambar? <br />Ke <span className="italic">rumah commis</span> aja!
           </h2>
           <p className="mt-4 text-primary-foreground/90 max-w-md">
             Bergabunglah dengan komunitas seniman & kolektor Indonesia.

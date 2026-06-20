@@ -40,7 +40,7 @@ function SiteHeader() {
             <Brush className="h-5 w-5" />
           </span>
           <span className="font-display text-xl font-semibold tracking-tight">
-            Ngommis<span className="text-primary">-yok</span>
+            Rumah <span className="text-primary">Commis</span>
           </span>
         </Link>
         <nav className="hidden md:flex items-center gap-1">

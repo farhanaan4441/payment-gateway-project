@@ -10,10 +10,10 @@ import heroImage from "@/assets/hero-collage.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
-      { name: "description", content: "Tempat berkarya & berkomisi. Pesan ilustrasi, chibi, portrait, dan logo dari artist Indonesia — aman dengan sistem escrow." },
-      { property: "og:title", content: "Rumah Commis — Marketplace Komisi Seni Indonesia" },
-      { property: "og:description", content: "Marketplace komisi seni Indonesia. Pesan aman, artist sejahtera." },
+      { title: "Rumah Commis — Mau pesan gambar? Ke rumah commis aja!" },
+      { name: "description", content: "Mau pesan gambar? Ke rumah commis aja! Pesan ilustrasi, chibi, portrait, dan logo dari artist Indonesia — aman dengan sistem escrow." },
+      { property: "og:title", content: "Rumah Commis — Mau pesan gambar? Ke rumah commis aja!" },
+      { property: "og:description", content: "Pesan ilustrasi, chibi, portrait, dan logo dari artist Indonesia. Aman dengan sistem escrow." },
     ],
   }),
   component: Index,
@@ -38,15 +38,15 @@ function Hero() {
       <div className="container mx-auto px-4 pt-12 pb-16 md:pt-20 md:pb-24 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-5">
-            <Sparkles className="h-3.5 w-3.5" /> Marketplace #1 untuk komisi seni lokal
+            <Sparkles className="h-3.5 w-3.5" /> Rumah-nya seniman komisi Indonesia
           </div>
           <h1 className="font-display text-4xl md:text-6xl font-semibold leading-[1.05] tracking-tight">
-            Tempat berkarya &<br />
-            <span className="text-primary italic">berkomisi.</span>
+            Mau pesan gambar?<br />
+            Ke <span className="text-primary italic">rumah commis</span> aja!
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-xl">
-            Pesan karya original dari ratusan seniman Indonesia. Bayar aman dengan
-            sistem escrow — dana baru cair setelah karya kamu terima.
+            Karya original dari ratusan seniman lokal. Bayar aman pakai escrow —
+            dana baru cair ke artist setelah karyamu sampai.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link to="/explore">
