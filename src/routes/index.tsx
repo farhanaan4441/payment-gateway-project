@@ -5,7 +5,6 @@ import { SiteShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { formatIDR } from "@/lib/format";
-import heroImg from "@/assets/hero-collage.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -65,25 +64,70 @@ function Hero() {
             <div className="flex items-center gap-2"><Star className="h-4 w-4 text-primary" /> Artist terverifikasi</div>
           </div>
         </div>
-        <div className="relative">
-          <div className="absolute -inset-6 bg-primary/10 rounded-[2rem] rotate-2" />
-          <img
-            src={heroImg}
-            alt="Seniman menggambar di tablet digital"
-            width={1280}
-            height={960}
-            className="relative rounded-[1.75rem] shadow-xl border border-border w-full object-cover aspect-[4/3]"
-          />
-          <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl shadow-lg p-4 flex items-center gap-3">
-            <div className="grid place-items-center h-10 w-10 rounded-xl bg-primary text-primary-foreground"><Wallet className="h-5 w-5" /></div>
-            <div>
-              <div className="text-xs text-muted-foreground">Mulai dari</div>
-              <div className="font-semibold">{formatIDR(35000)}</div>
+        <HeroPanel />
+      </div>
+    </section>
+  );
+}
+
+function HeroPanel() {
+  const chips = ["Ilustrasi", "Chibi", "Portrait", "Logo", "Reference Sheet", "Wallpaper"];
+  return (
+    <div className="relative">
+      <div className="absolute -inset-6 bg-primary/10 rounded-[2rem] rotate-2" />
+      <div className="relative aspect-[4/3] w-full rounded-[1.75rem] border border-border shadow-xl overflow-hidden bg-gradient-to-br from-primary/15 via-accent/25 to-secondary">
+        {/* Decorative blobs */}
+        <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-accent/40 blur-3xl" />
+        {/* Dotted grid */}
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, hsl(var(--primary) / 0.25) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
+          }}
+        />
+        {/* Content */}
+        <div className="relative h-full w-full p-6 md:p-8 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur border border-border text-xs font-semibold">
+              <Star className="h-3.5 w-3.5 text-primary fill-primary" /> 4.9 rata-rata rating
+            </div>
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur border border-border text-xs font-semibold">
+              <Sparkles className="h-3.5 w-3.5 text-primary" /> 200+ artist aktif
+            </div>
+          </div>
+
+          <div className="grid place-items-center my-4">
+            <div className="h-20 w-20 md:h-24 md:w-24 rounded-3xl bg-primary text-primary-foreground grid place-items-center shadow-xl rotate-[-6deg]">
+              <Brush className="h-10 w-10 md:h-12 md:w-12" />
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs text-muted-foreground font-medium mb-2">Kategori populer</div>
+            <div className="flex flex-wrap gap-2">
+              {chips.map((c) => (
+                <span
+                  key={c}
+                  className="px-2.5 py-1 rounded-full bg-background/85 backdrop-blur border border-border text-xs font-medium"
+                >
+                  {c}
+                </span>
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </section>
+      <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl shadow-lg p-4 flex items-center gap-3">
+        <div className="grid place-items-center h-10 w-10 rounded-xl bg-primary text-primary-foreground"><Wallet className="h-5 w-5" /></div>
+        <div>
+          <div className="text-xs text-muted-foreground">Mulai dari</div>
+          <div className="font-semibold">{formatIDR(35000)}</div>
+        </div>
+      </div>
+    </div>
   );
 }
 
