@@ -5,6 +5,7 @@ import { SiteShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { formatIDR } from "@/lib/format";
+import heroImg from "@/assets/hero-collage.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,9 +68,10 @@ function Hero() {
         <div className="relative">
           <div className="absolute -inset-6 bg-primary/10 rounded-[2rem] rotate-2" />
           <img
-            src="https://images.unsplash.com/photo-1607457561901-e6ec3a6d16df?auto=format&fit=crop&w=1200&q=80"
+            src={heroImg}
             alt="Seniman menggambar di tablet digital"
-            loading="lazy"
+            width={1280}
+            height={960}
             className="relative rounded-[1.75rem] shadow-xl border border-border w-full object-cover aspect-[4/3]"
           />
           <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl shadow-lg p-4 flex items-center gap-3">
