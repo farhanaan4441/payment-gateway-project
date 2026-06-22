@@ -1,20 +1,19 @@
-## Perubahan
+## Rencana
 
-### 1. Hapus kategori "Emote & Stiker"
-- Tambah migration baru: `DELETE FROM public.categories WHERE slug = 'emote';`
-- Kategori ini akan hilang dari Home (Category Strip), halaman `/categories`, dan filter `/explore`.
+### 1. Email verifikasi otomatis
+- Aktifkan infrastruktur email Lovable + scaffold template email auth (signup confirmation, magic link, recovery, dll).
+- Setelah ini, setiap pendaftar baru otomatis menerima email verifikasi bermerek "Rumah Commis", dan user yang login tapi belum verifikasi bisa minta kirim ulang (tombol resend sudah ada di dialog auth).
+- Jika domain email belum di-setup, akan muncul dialog setup domain dulu (perlu langkah singkat dari kamu).
 
-### 2. Perbaiki gambar hero yang tidak muncul
-Masalah: `src/routes/index.tsx` memakai URL Unsplash eksternal (`images.unsplash.com/...`) — bisa gagal load karena jaringan/hotlink dan tidak ada fallback.
+### 2. Ganti hero image jadi visual non-foto
+Di `src/routes/index.tsx`, hapus `<img>` hero, ganti dengan **panel dekoratif** agar space tidak kosong:
+- Background gradient lembut (warna brand primary → accent).
+- Pola dekoratif geometris (lingkaran/blob blur, garis tipis, dotted grid) pakai pure CSS/SVG — tidak ada gambar generatif.
+- Floating "badge" card berisi info ringkas: ⭐ rating, jumlah seniman aktif, contoh kategori populer (Ilustrasi, Chibi, Logo) sebagai chip.
+- Tetap responsif, mobile tetap rapi.
+- Hapus import `hero-collage.jpg`.
 
-Solusi:
-- Generate ulang `src/assets/hero-collage.jpg` dengan gaya foto realistis (artist menggambar di tablet, pencahayaan natural, bukan tampak AI), pakai `imagegen` model `standard`.
-- Ganti `<img src="https://images.unsplash.com/...">` di Hero menjadi import lokal:
-  ```ts
-  import heroImg from "@/assets/hero-collage.jpg";
-  ...
-  <img src={heroImg} alt="Seniman menggambar di tablet digital" ... />
-  ```
-- Tambah `onError` fallback sederhana (sembunyikan frame bila gagal) supaya layout tetap rapi.
-
-Tidak ada perubahan business logic lain.
+### Detail teknis
+- Tool: `email_domain--check_email_domain_status` → bila perlu, tampilkan setup dialog → `email_domain--scaffold_auth_email_templates`.
+- File yang diubah: `src/routes/index.tsx` (hero section saja).
+- Tidak ada perubahan database atau logic lain.
