@@ -22,8 +22,6 @@ export function AuthDialog({
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [pendingVerification, setPendingVerification] = useState<string | null>(null);
-  const [resending, setResending] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,17 +37,11 @@ export function AuthDialog({
           },
         });
         if (error) throw error;
-        setPendingVerification(email);
-        toast.success("Akun dibuat — cek email kamu untuk verifikasi.");
+        toast.success("Akun dibuat — selamat datang!");
+        onOpenChange(false);
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          if (error.message?.toLowerCase().includes("email not confirmed")) {
-            setPendingVerification(email);
-            throw new Error("Email kamu belum diverifikasi. Cek inbox atau kirim ulang link verifikasi.");
-          }
-          throw error;
-        }
+        if (error) throw error;
         toast.success("Selamat datang kembali!");
         onOpenChange(false);
       }
@@ -57,24 +49,6 @@ export function AuthDialog({
       toast.error(err.message ?? "Terjadi kesalahan");
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function resendVerification() {
-    if (!pendingVerification) return;
-    setResending(true);
-    try {
-      const { error } = await supabase.auth.resend({
-        type: "signup",
-        email: pendingVerification,
-        options: { emailRedirectTo: window.location.origin + "/" },
-      });
-      if (error) throw error;
-      toast.success("Email verifikasi terkirim ulang.");
-    } catch (err: any) {
-      toast.error(err.message ?? "Gagal mengirim ulang");
-    } finally {
-      setResending(false);
     }
   }
 
@@ -101,23 +75,6 @@ export function AuthDialog({
         <Button variant="outline" className="w-full h-11" onClick={googleSignIn}>
           <GoogleIcon /> Lanjut dengan Google
         </Button>
-
-        {pendingVerification && (
-          <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
-            <p className="font-medium text-foreground">Verifikasi email kamu</p>
-            <p className="text-muted-foreground mt-1">
-              Link verifikasi dikirim ke <span className="font-medium text-foreground">{pendingVerification}</span>.
-            </p>
-            <button
-              type="button"
-              onClick={resendVerification}
-              disabled={resending}
-              className="text-primary font-medium hover:underline mt-2 disabled:opacity-50"
-            >
-              {resending ? "Mengirim…" : "Kirim ulang email verifikasi"}
-            </button>
-          </div>
-        )}
 
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-border" />
