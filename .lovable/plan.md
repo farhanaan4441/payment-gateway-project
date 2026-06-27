@@ -1,19 +1,32 @@
-## Rencana
+# Hilangkan verifikasi email + kirim PRD terbaru
 
-### 1. Email verifikasi otomatis
-- Aktifkan infrastruktur email Lovable + scaffold template email auth (signup confirmation, magic link, recovery, dll).
-- Setelah ini, setiap pendaftar baru otomatis menerima email verifikasi bermerek "Rumah Commis", dan user yang login tapi belum verifikasi bisa minta kirim ulang (tombol resend sudah ada di dialog auth).
-- Jika domain email belum di-setup, akan muncul dialog setup domain dulu (perlu langkah singkat dari kamu).
+## 1. Skip verifikasi email — daftar/login langsung pakai email & password
 
-### 2. Ganti hero image jadi visual non-foto
-Di `src/routes/index.tsx`, hapus `<img>` hero, ganti dengan **panel dekoratif** agar space tidak kosong:
-- Background gradient lembut (warna brand primary → accent).
-- Pola dekoratif geometris (lingkaran/blob blur, garis tipis, dotted grid) pakai pure CSS/SVG — tidak ada gambar generatif.
-- Floating "badge" card berisi info ringkas: ⭐ rating, jumlah seniman aktif, contoh kategori populer (Ilustrasi, Chibi, Logo) sebagai chip.
-- Tetap responsif, mobile tetap rapi.
-- Hapus import `hero-collage.jpg`.
+**Backend (Lovable Cloud Auth):**
+- Aktifkan **auto-confirm email** — akun langsung aktif begitu signup, tanpa harus klik link verifikasi.
+- Tidak perlu setup email domain lagi untuk flow auth.
 
-### Detail teknis
-- Tool: `email_domain--check_email_domain_status` → bila perlu, tampilkan setup dialog → `email_domain--scaffold_auth_email_templates`.
-- File yang diubah: `src/routes/index.tsx` (hero section saja).
-- Tidak ada perubahan database atau logic lain.
+**Frontend — `src/components/auth-dialog.tsx` & `src/routes/auth.tsx`:**
+- Hapus state `pendingVerification` + tombol "Kirim ulang email verifikasi".
+- Hapus banner "Verifikasi email kamu".
+- Hapus handler `resendVerification` dan cek `"email not confirmed"`.
+- Setelah `signUp()` sukses → langsung `toast.success("Akun dibuat, selamat datang!")` dan tutup dialog (user otomatis ter-login karena auto-confirm aktif).
+- Field tetap: Nama tampilan (signup), Email, Password — sesuai permintaan kamu.
+
+**Catatan:** Google sign-in tetap ada sebagai opsi tambahan. Trade-off auto-confirm: orang bisa daftar pakai email orang lain (karena tidak ada verifikasi). Untuk MVP biasanya OK.
+
+## 2. PRD terbaru
+
+Generate ulang PRD `Rumah Commis` v1.2 ke `/mnt/documents/PRD-RumahCommis-v1.2.md` dengan update:
+- Auth flow: email/password tanpa verifikasi + Google OAuth (revisi dari v1.1)
+- Status fitur saat ini: kategori (tanpa Emote & Stiker), hero panel dekoratif (bukan foto), navbar dengan auth dialog
+- Roadmap fitur belum jadi: wallet, komisi artist, checkout, dashboard
+
+Hasilnya akan muncul sebagai artifact yang bisa kamu download.
+
+## Yang akan diubah
+
+- Tool: `supabase--configure_auth` → set `auto_confirm_email: true`
+- `src/components/auth-dialog.tsx` — bersihkan UI verifikasi
+- `src/routes/auth.tsx` — bersihkan UI verifikasi
+- File baru: `/mnt/documents/PRD-RumahCommis-v1.2.md`
