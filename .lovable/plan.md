@@ -1,32 +1,34 @@
-# Hilangkan verifikasi email + kirim PRD terbaru
+## Penyebab "Invalid login credentials"
 
-## 1. Skip verifikasi email — daftar/login langsung pakai email & password
+Backend Lovable Cloud kamu sekarang **sudah aktif** (signup `muhfaarhaan@gmail.com` berhasil — log auth menunjukkan `confirmation_sent_at` terisi, tapi `email_confirmed_at` kosong).
 
-**Backend (Lovable Cloud Auth):**
-- Aktifkan **auto-confirm email** — akun langsung aktif begitu signup, tanpa harus klik link verifikasi.
-- Tidak perlu setup email domain lagi untuk flow auth.
+Akar masalah: **email confirmation masih ON di backend**. Jadi:
+- Signup sukses → user dibuat, tapi status "unconfirmed"
+- Login dengan password yang sama → ditolak `invalid_credentials` karena Supabase memperlakukan akun unconfirmed = tidak bisa login password
+- Tidak ada email verifikasi yang sampai (karena belum ada email domain terkonfigurasi)
 
-**Frontend — `src/components/auth-dialog.tsx` & `src/routes/auth.tsx`:**
-- Hapus state `pendingVerification` + tombol "Kirim ulang email verifikasi".
-- Hapus banner "Verifikasi email kamu".
-- Hapus handler `resendVerification` dan cek `"email not confirmed"`.
-- Setelah `signUp()` sukses → langsung `toast.success("Akun dibuat, selamat datang!")` dan tutup dialog (user otomatis ter-login karena auto-confirm aktif).
-- Field tetap: Nama tampilan (signup), Email, Password — sesuai permintaan kamu.
+Frontend sudah benar (tidak ada UI verifikasi). Yang kurang: **flip setting backend `auto_confirm_email: true`**.
 
-**Catatan:** Google sign-in tetap ada sebagai opsi tambahan. Trade-off auto-confirm: orang bisa daftar pakai email orang lain (karena tidak ada verifikasi). Untuk MVP biasanya OK.
+## Yang akan dieksekusi
 
-## 2. PRD terbaru
+1. **Aktifkan auto-confirm email** lewat `supabase--configure_auth`:
+   - `auto_confirm_email: true`
+   - `disable_signup: false`
+   - `external_anonymous_users_enabled: false`
+   - `password_hibp_enabled: false`
+   
+   Efek: signup berikutnya akun langsung confirmed → bisa langsung login.
 
-Generate ulang PRD `Rumah Commis` v1.2 ke `/mnt/documents/PRD-RumahCommis-v1.2.md` dengan update:
-- Auth flow: email/password tanpa verifikasi + Google OAuth (revisi dari v1.1)
-- Status fitur saat ini: kategori (tanpa Emote & Stiker), hero panel dekoratif (bukan foto), navbar dengan auth dialog
-- Roadmap fitur belum jadi: wallet, komisi artist, checkout, dashboard
+2. **Catatan akun lama `muhfaarhaan@gmail.com`**: akun yang sudah terlanjur dibuat sebelum flag ini aktif kemungkinan tetap unconfirmed. Solusi praktis: signup ulang pakai email lain (atau hapus user lama dari Backend → Users). Setelah auto-confirm aktif, semua signup baru langsung jalan.
 
-Hasilnya akan muncul sebagai artifact yang bisa kamu download.
+3. **Generate PRD v1.4** ke `/mnt/documents/PRD-RumahCommis-v1.4.md`:
+   - Konfirmasi auth flow: email + password, **auto-confirm aktif** (tanpa verifikasi email)
+   - Catatan operasional: backend lifecycle (pause/resume), efek email confirmation toggle
+   - Status fitur saat ini: kategori final (tanpa Emote & Stiker), hero panel dekoratif, auth dialog di navbar, Google OAuth opsional
+   - Roadmap belum jadi: wallet, dashboard artist, checkout, pembayaran (provider ditunda)
 
-## Yang akan diubah
+## File yang disentuh
 
-- Tool: `supabase--configure_auth` → set `auto_confirm_email: true`
-- `src/components/auth-dialog.tsx` — bersihkan UI verifikasi
-- `src/routes/auth.tsx` — bersihkan UI verifikasi
-- File baru: `/mnt/documents/PRD-RumahCommis-v1.2.md`
+- Tool call: `supabase--configure_auth`
+- File baru: `/mnt/documents/PRD-RumahCommis-v1.4.md`
+- Tidak ada perubahan kode frontend (sudah bersih dari turn sebelumnya)
