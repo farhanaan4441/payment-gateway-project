@@ -1,34 +1,29 @@
-## Penyebab "Invalid login credentials"
+## Akar masalah "invalid login credentials"
 
-Backend Lovable Cloud kamu sekarang **sudah aktif** (signup `muhfaarhaan@gmail.com` berhasil — log auth menunjukkan `confirmation_sent_at` terisi, tapi `email_confirmed_at` kosong).
+Dari auth logs: kamu selama ini masuk pakai **Google OAuth** (`muhfaarhaan@gmail.com` dan `muhamadfarhan3802@gmail.com` — keduanya `provider: google`, `login_method: oidc`). Tidak ada satu pun event `password` grant di log.
 
-Akar masalah: **email confirmation masih ON di backend**. Jadi:
-- Signup sukses → user dibuat, tapi status "unconfirmed"
-- Login dengan password yang sama → ditolak `invalid_credentials` karena Supabase memperlakukan akun unconfirmed = tidak bisa login password
-- Tidak ada email verifikasi yang sampai (karena belum ada email domain terkonfigurasi)
+Artinya:
+- Akun `muhfaarhaan@gmail.com` **dibuat via Google**, bukan via form email+password.
+- Akun Google **tidak punya password** di Supabase. Password hanya ada kalau kamu signup lewat form email+password.
+- Waktu kamu coba login pakai email + password → Supabase cek password → tidak ada → `invalid_credentials`. Ini **bukan bug**, ini konsekuensi akun Google-only.
 
-Frontend sudah benar (tidak ada UI verifikasi). Yang kurang: **flip setting backend `auto_confirm_email: true`**.
+Auto-confirm email sudah aktif (dikonfirmasi turn sebelumnya + akun `muhamadfarhan3802` yang baru signup `email_confirmed_at` langsung terisi). Jadi signup baru via form email+password sekarang bisa langsung login.
 
-## Yang akan dieksekusi
+## Rencana eksekusi
 
-1. **Aktifkan auto-confirm email** lewat `supabase--configure_auth`:
-   - `auto_confirm_email: true`
-   - `disable_signup: false`
-   - `external_anonymous_users_enabled: false`
-   - `password_hibp_enabled: false`
-   
-   Efek: signup berikutnya akun langsung confirmed → bisa langsung login.
+1. **Tidak ada perubahan kode.** Masalah user-flow, bukan bug.
+2. **Verifikasi lewat `supabase--read_query`**: cek `auth.identities` untuk konfirmasi kedua akun kamu memang provider=google-only (bukan email). Ini bukti final.
+3. **Kasih user 2 opsi jalan keluar** (di pesan setelah plan di-approve):
+   - **A. Tetap pakai Google** untuk email-email itu (paling simpel).
+   - **B. Buat akun baru** pakai email lain via form Daftar → email+password akan langsung jalan (auto-confirm aktif).
+   - **C. Kalau mau `muhfaarhaan@gmail.com` bisa login pakai password juga**: hapus user itu dari Backend → Users, lalu signup ulang via form Daftar dengan password.
+4. **Generate PRD v1.5** ke `/mnt/documents/PRD-RumahCommis-v1.5.md`:
+   - Update bagian Auth: jelaskan bahwa akun Google dan akun email+password terpisah (satu email = satu provider identity di setup ini), auto-confirm aktif untuk signup email.
+   - Tambah "Known UX pitfall" section: user signup via Google lalu coba login via email/password → invalid_credentials. Rekomendasi UX ke depan: deteksi email yang sudah ada di provider Google saat form email login dan arahkan ke tombol Google.
+   - Sisanya sama dengan v1.4 (kategori final, hero panel dekoratif, roadmap payment ditunda).
 
-2. **Catatan akun lama `muhfaarhaan@gmail.com`**: akun yang sudah terlanjur dibuat sebelum flag ini aktif kemungkinan tetap unconfirmed. Solusi praktis: signup ulang pakai email lain (atau hapus user lama dari Backend → Users). Setelah auto-confirm aktif, semua signup baru langsung jalan.
+## File yang disentuh (saat build mode)
 
-3. **Generate PRD v1.4** ke `/mnt/documents/PRD-RumahCommis-v1.4.md`:
-   - Konfirmasi auth flow: email + password, **auto-confirm aktif** (tanpa verifikasi email)
-   - Catatan operasional: backend lifecycle (pause/resume), efek email confirmation toggle
-   - Status fitur saat ini: kategori final (tanpa Emote & Stiker), hero panel dekoratif, auth dialog di navbar, Google OAuth opsional
-   - Roadmap belum jadi: wallet, dashboard artist, checkout, pembayaran (provider ditunda)
-
-## File yang disentuh
-
-- Tool call: `supabase--configure_auth`
-- File baru: `/mnt/documents/PRD-RumahCommis-v1.4.md`
-- Tidak ada perubahan kode frontend (sudah bersih dari turn sebelumnya)
+- Tool call: `supabase--read_query` (verifikasi identities — read-only)
+- File baru: `/mnt/documents/PRD-RumahCommis-v1.5.md`
+- **Tidak ada perubahan kode frontend/backend.**
