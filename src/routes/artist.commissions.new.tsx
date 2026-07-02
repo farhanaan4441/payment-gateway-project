@@ -31,6 +31,26 @@ function NewCommission() {
     queryFn: async () => (await supabase.from("categories").select("*").order("position")).data ?? [],
   });
 
+  // Pastikan user sudah punya role & artist_profile sebelum bisa post komisi
+  const { data: readiness, isLoading: readinessLoading } = useQuery({
+    queryKey: ["artist-readiness", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const [{ data: role }, { data: profile }] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", user!.id).eq("role", "artist").maybeSingle(),
+        supabase.from("artist_profiles").select("user_id").eq("user_id", user!.id).maybeSingle(),
+      ]);
+      return { hasRole: !!role, hasProfile: !!profile };
+    },
+  });
+
+  useEffect(() => {
+    if (user && readiness && (!readiness.hasRole || !readiness.hasProfile)) {
+      toast.info("Lengkapi profil artist dulu sebelum membuat komisi.");
+      navigate({ to: "/become-artist" });
+    }
+  }, [user, readiness, navigate]);
+
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState<string>("");
   const [description, setDescription] = useState("");
@@ -42,6 +62,9 @@ function NewCommission() {
   const create = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Login dulu");
+      if (Number(basePrice) <= 0) throw new Error("Harga harus lebih dari 0");
+      if (slots <= 0) throw new Error("Slot minimal 1");
+      if (turnaround <= 0) throw new Error("Lama pengerjaan minimal 1 hari");
       let coverUrl: string | null = null;
       if (cover) {
         const path = `${user.id}/${Date.now()}-${cover.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
@@ -69,7 +92,8 @@ function NewCommission() {
     onError: (e: any) => toast.error(e.message),
   });
 
-  if (loading || !user) return null;
+  if (loading || !user || readinessLoading) return null;
+  if (readiness && (!readiness.hasRole || !readiness.hasProfile)) return null;
 
   return (
     <SiteShell>
