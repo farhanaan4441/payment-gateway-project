@@ -1,29 +1,60 @@
-## Akar masalah "invalid login credentials"
+## 1. Rekomendasi Payment
 
-Dari auth logs: kamu selama ini masuk pakai **Google OAuth** (`muhfaarhaan@gmail.com` dan `muhamadfarhan3802@gmail.com` — keduanya `provider: google`, `login_method: oidc`). Tidak ada satu pun event `password` grant di log.
+Lovable's built-in payments (Stripe/Paddle) **tidak tersedia** untuk seller country Indonesia + tipe produk marketplace komisi. Jadi opsi realistis untuk Rumah Commis:
 
-Artinya:
-- Akun `muhfaarhaan@gmail.com` **dibuat via Google**, bukan via form email+password.
-- Akun Google **tidak punya password** di Supabase. Password hanya ada kalau kamu signup lewat form email+password.
-- Waktu kamu coba login pakai email + password → Supabase cek password → tidak ada → `invalid_credentials`. Ini **bukan bug**, ini konsekuensi akun Google-only.
+**Rekomendasi utama: Midtrans (Snap)**
+- Payment gateway lokal Indonesia, mendukung QRIS, VA (BCA/Mandiri/BNI/BRI/Permata), GoPay, OVO, DANA, ShopeePay, kartu kredit — semua metode yang sudah muncul di mock checkout.
+- Sandbox gratis, tanpa verifikasi bisnis untuk testing.
+- Cara integrasi di stack ini: Snap redirect/popup dari client + TanStack server function untuk create transaction + server route `/api/public/webhooks/midtrans` untuk notifikasi status (update `orders.status` → `paid`, insert `payments`, isi `wallet_transactions` escrow).
+- Butuh 2 secret dari akun Midtrans: `MIDTRANS_SERVER_KEY` + `MIDTRANS_CLIENT_KEY` (nanti diminta lewat add_secret setelah kamu setuju).
 
-Auto-confirm email sudah aktif (dikonfirmasi turn sebelumnya + akun `muhamadfarhan3802` yang baru signup `email_confirmed_at` langsung terisi). Jadi signup baru via form email+password sekarang bisa langsung login.
+Alternatif kalau nanti mau: **Xendit** (fitur mirip, UX developer sedikit lebih rapi), atau tetap **mock** untuk demo.
 
-## Rencana eksekusi
+## 2. Rencana build (jika kamu setuju Midtrans)
 
-1. **Tidak ada perubahan kode.** Masalah user-flow, bukan bug.
-2. **Verifikasi lewat `supabase--read_query`**: cek `auth.identities` untuk konfirmasi kedua akun kamu memang provider=google-only (bukan email). Ini bukti final.
-3. **Kasih user 2 opsi jalan keluar** (di pesan setelah plan di-approve):
-   - **A. Tetap pakai Google** untuk email-email itu (paling simpel).
-   - **B. Buat akun baru** pakai email lain via form Daftar → email+password akan langsung jalan (auto-confirm aktif).
-   - **C. Kalau mau `muhfaarhaan@gmail.com` bisa login pakai password juga**: hapus user itu dari Backend → Users, lalu signup ulang via form Daftar dengan password.
-4. **Generate PRD v1.5** ke `/mnt/documents/PRD-RumahCommis-v1.5.md`:
-   - Update bagian Auth: jelaskan bahwa akun Google dan akun email+password terpisah (satu email = satu provider identity di setup ini), auto-confirm aktif untuk signup email.
-   - Tambah "Known UX pitfall" section: user signup via Google lalu coba login via email/password → invalid_credentials. Rekomendasi UX ke depan: deteksi email yang sudah ada di provider Google saat form email login dan arahkan ke tombol Google.
-   - Sisanya sama dengan v1.4 (kategori final, hero panel dekoratif, roadmap payment ditunda).
+### A. Payment (Midtrans sandbox)
+1. Tambah 2 secret: `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY` via `add_secret`.
+2. Server fn `createMidtransTransaction` (`src/lib/payments.functions.ts`, pakai `requireSupabaseAuth`): validasi order milik buyer, panggil Snap API, simpan `payments` row status `pending`, return `snap_token` + `redirect_url`.
+3. Update `src/routes/orders.$id.checkout.tsx`: ganti mock button → load `snap.js` (client key), buka Snap popup pakai token dari server fn. Kalau `onSuccess` callback → optimistic redirect ke `/orders/$id` (webhook yang otoritatif).
+4. Server route publik `src/routes/api/public/webhooks/midtrans.ts`: verifikasi signature SHA-512 (`order_id+status_code+gross_amount+server_key`), lalu pakai `supabaseAdmin` untuk:
+   - update `payments.status` (settlement/capture → `succeeded`, deny/expire/cancel → `failed`)
+   - update `orders.status` → `paid` saat sukses (escrow: dana masih di platform)
+   - insert `wallet_transactions` tipe `hold` untuk artist
+5. Tetap sisakan tombol "Mode demo" (mock) di bawah, on/off via `import.meta.env.VITE_PAYMENTS_DEMO` supaya bisa presentasi tanpa akun Midtrans aktif.
 
-## File yang disentuh (saat build mode)
+### B. Artist buat komisi baru
+Route `src/routes/artist.commissions.new.tsx` sudah ada dan fungsional (form judul, kategori, deskripsi, harga, TAT, slot, cover upload → insert `commissions`). Yang perlu diperbaiki supaya artist gampang ke sana:
+1. Cek `src/routes/dashboard.tsx` & `src/routes/become-artist.tsx` — pastikan ada CTA "Buat Komisi Baru" yang link ke `/artist/commissions/new` untuk user berperan `artist`.
+2. Tambah shortcut di navbar (`SiteHeader`) untuk role artist: menu "Komisi Saya" → `/artist/commissions`.
+3. Auto-create `artist_profiles` row saat user pertama kali buka `/artist/commissions/new` kalau belum ada (biar tidak gagal FK).
+4. Validasi ringan di form (harga > 0, slot > 0), dan setelah publish langsung redirect ke detail komisi (sudah).
 
-- Tool call: `supabase--read_query` (verifikasi identities — read-only)
-- File baru: `/mnt/documents/PRD-RumahCommis-v1.5.md`
-- **Tidak ada perubahan kode frontend/backend.**
+### C. Sync GitHub
+Semua perubahan file yang di-apply di Lovable otomatis push ke repo GitHub yang sudah terkoneksi. Tidak ada langkah manual — cukup pastikan project sudah terhubung ke GitHub via menu `+ → GitHub → Connect project`. Kalau belum, aku akan kasih instruksi setelah build selesai.
+
+### D. PRD v1.6
+Generate `/mnt/documents/PRD-RumahCommis-v1.6.md`:
+- Update seksi Payment: Midtrans sebagai provider utama (Snap + webhook), escrow lewat `wallet_transactions`, fallback mock mode.
+- Update seksi Artist Onboarding: alur buat komisi baru + auto-create `artist_profiles`.
+- Update navigasi role-aware.
+- Sisanya sama dengan v1.5.
+
+## File yang akan disentuh (saat build mode)
+
+Baru:
+- `src/lib/payments.functions.ts`
+- `src/routes/api/public/webhooks/midtrans.ts`
+- `/mnt/documents/PRD-RumahCommis-v1.6.md`
+
+Diubah:
+- `src/routes/orders.$id.checkout.tsx` (integrasi Snap + toggle demo)
+- `src/routes/artist.commissions.new.tsx` (auto-ensure artist_profiles, validasi)
+- `src/routes/dashboard.tsx` / `src/components/site-shell.tsx` (CTA + menu artist)
+
+Secret (via add_secret, butuh input kamu):
+- `MIDTRANS_SERVER_KEY`, `MIDTRANS_CLIENT_KEY`
+
+## Yang perlu kamu konfirmasi sebelum aku eksekusi
+
+1. **Pakai Midtrans sandbox?** (Ya / Pakai mock dulu / Pilih Xendit)
+2. Kalau ya Midtrans: siapkan akun di https://dashboard.sandbox.midtrans.com → Settings → Access Keys, nanti aku minta 2 key itu lewat form aman.
