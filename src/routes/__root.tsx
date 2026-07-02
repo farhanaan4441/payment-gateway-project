@@ -89,10 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Mau pesan gambar? Ke rumah commis aja! Temukan seniman lokal terbaik untuk ilustrasi, chibi, portrait, logo, dan lainnya." },
       { name: "author", content: "Rumah Commis" },
       { property: "og:title", content: "Rumah Commis — Mau pesan gambar? Ke rumah commis aja!" },
-      { property: "og:description", content: "Pesan komisi seni dari artist Indonesia, aman dengan sistem escrow." },
+      { property: "og:description", content: "Mau pesan gambar? Ke rumah commis aja! Temukan seniman lokal terbaik untuk ilustrasi, chibi, portrait, logo, dan lainnya." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Rumah Commis — Mau pesan gambar? Ke rumah commis aja!" },
+      { name: "twitter:description", content: "Mau pesan gambar? Ke rumah commis aja! Temukan seniman lokal terbaik untuk ilustrasi, chibi, portrait, logo, dan lainnya." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f3902b6b-dcde-45e9-9851-2c4bac21354c/id-preview-6abda839--fab8e36f-a809-4e15-9af4-b52bd7543989.lovable.app-1782901214427.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/f3902b6b-dcde-45e9-9851-2c4bac21354c/id-preview-6abda839--fab8e36f-a809-4e15-9af4-b52bd7543989.lovable.app-1782901214427.png" },
     ],
     links: [
       {
