@@ -20,7 +20,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrdersIdRouteImport } from './routes/orders.$id'
 import { Route as CommissionsSlugRouteImport } from './routes/commissions.$slug'
-import { Route as ArtistCommissionsRouteImport } from './routes/artist.commissions'
+import { Route as ArtistCommissionsIndexRouteImport } from './routes/artist.commissions.index'
 import { Route as OrdersIdCheckoutRouteImport } from './routes/orders.$id.checkout'
 import { Route as ArtistCommissionsNewRouteImport } from './routes/artist.commissions.new'
 
@@ -79,9 +79,9 @@ const CommissionsSlugRoute = CommissionsSlugRouteImport.update({
   path: '/commissions/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ArtistCommissionsRoute = ArtistCommissionsRouteImport.update({
-  id: '/artist/commissions',
-  path: '/artist/commissions',
+const ArtistCommissionsIndexRoute = ArtistCommissionsIndexRouteImport.update({
+  id: '/artist/commissions/',
+  path: '/artist/commissions/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersIdCheckoutRoute = OrdersIdCheckoutRouteImport.update({
@@ -90,9 +90,9 @@ const OrdersIdCheckoutRoute = OrdersIdCheckoutRouteImport.update({
   getParentRoute: () => OrdersIdRoute,
 } as any)
 const ArtistCommissionsNewRoute = ArtistCommissionsNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => ArtistCommissionsRoute,
+  id: '/artist/commissions/new',
+  path: '/artist/commissions/new',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -105,11 +105,11 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/orders': typeof OrdersRouteWithChildren
   '/wallet': typeof WalletRoute
-  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
   '/commissions/$slug': typeof CommissionsSlugRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/artist/commissions/new': typeof ArtistCommissionsNewRoute
   '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
+  '/artist/commissions/': typeof ArtistCommissionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -121,11 +121,11 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/orders': typeof OrdersRouteWithChildren
   '/wallet': typeof WalletRoute
-  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
   '/commissions/$slug': typeof CommissionsSlugRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/artist/commissions/new': typeof ArtistCommissionsNewRoute
   '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
+  '/artist/commissions': typeof ArtistCommissionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,11 +138,11 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/orders': typeof OrdersRouteWithChildren
   '/wallet': typeof WalletRoute
-  '/artist/commissions': typeof ArtistCommissionsRouteWithChildren
   '/commissions/$slug': typeof CommissionsSlugRoute
   '/orders/$id': typeof OrdersIdRouteWithChildren
   '/artist/commissions/new': typeof ArtistCommissionsNewRoute
   '/orders/$id/checkout': typeof OrdersIdCheckoutRoute
+  '/artist/commissions/': typeof ArtistCommissionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,11 +156,11 @@ export interface FileRouteTypes {
     | '/explore'
     | '/orders'
     | '/wallet'
-    | '/artist/commissions'
     | '/commissions/$slug'
     | '/orders/$id'
     | '/artist/commissions/new'
     | '/orders/$id/checkout'
+    | '/artist/commissions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,11 +172,11 @@ export interface FileRouteTypes {
     | '/explore'
     | '/orders'
     | '/wallet'
-    | '/artist/commissions'
     | '/commissions/$slug'
     | '/orders/$id'
     | '/artist/commissions/new'
     | '/orders/$id/checkout'
+    | '/artist/commissions'
   id:
     | '__root__'
     | '/'
@@ -188,11 +188,11 @@ export interface FileRouteTypes {
     | '/explore'
     | '/orders'
     | '/wallet'
-    | '/artist/commissions'
     | '/commissions/$slug'
     | '/orders/$id'
     | '/artist/commissions/new'
     | '/orders/$id/checkout'
+    | '/artist/commissions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -205,8 +205,9 @@ export interface RootRouteChildren {
   ExploreRoute: typeof ExploreRoute
   OrdersRoute: typeof OrdersRouteWithChildren
   WalletRoute: typeof WalletRoute
-  ArtistCommissionsRoute: typeof ArtistCommissionsRouteWithChildren
   CommissionsSlugRoute: typeof CommissionsSlugRoute
+  ArtistCommissionsNewRoute: typeof ArtistCommissionsNewRoute
+  ArtistCommissionsIndexRoute: typeof ArtistCommissionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -288,11 +289,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommissionsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/artist/commissions': {
-      id: '/artist/commissions'
+    '/artist/commissions/': {
+      id: '/artist/commissions/'
       path: '/artist/commissions'
-      fullPath: '/artist/commissions'
-      preLoaderRoute: typeof ArtistCommissionsRouteImport
+      fullPath: '/artist/commissions/'
+      preLoaderRoute: typeof ArtistCommissionsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders/$id/checkout': {
@@ -304,10 +305,10 @@ declare module '@tanstack/react-router' {
     }
     '/artist/commissions/new': {
       id: '/artist/commissions/new'
-      path: '/new'
+      path: '/artist/commissions/new'
       fullPath: '/artist/commissions/new'
       preLoaderRoute: typeof ArtistCommissionsNewRouteImport
-      parentRoute: typeof ArtistCommissionsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -335,17 +336,6 @@ const OrdersRouteChildren: OrdersRouteChildren = {
 const OrdersRouteWithChildren =
   OrdersRoute._addFileChildren(OrdersRouteChildren)
 
-interface ArtistCommissionsRouteChildren {
-  ArtistCommissionsNewRoute: typeof ArtistCommissionsNewRoute
-}
-
-const ArtistCommissionsRouteChildren: ArtistCommissionsRouteChildren = {
-  ArtistCommissionsNewRoute: ArtistCommissionsNewRoute,
-}
-
-const ArtistCommissionsRouteWithChildren =
-  ArtistCommissionsRoute._addFileChildren(ArtistCommissionsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -356,19 +346,10 @@ const rootRouteChildren: RootRouteChildren = {
   ExploreRoute: ExploreRoute,
   OrdersRoute: OrdersRouteWithChildren,
   WalletRoute: WalletRoute,
-  ArtistCommissionsRoute: ArtistCommissionsRouteWithChildren,
   CommissionsSlugRoute: CommissionsSlugRoute,
+  ArtistCommissionsNewRoute: ArtistCommissionsNewRoute,
+  ArtistCommissionsIndexRoute: ArtistCommissionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

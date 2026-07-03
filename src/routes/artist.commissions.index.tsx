@@ -9,7 +9,7 @@ import { formatIDR } from "@/lib/format";
 import { Plus, Brush, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/artist/commissions")({
+export const Route = createFileRoute("/artist/commissions/")({
   head: () => ({ meta: [{ title: "Kelola Komisi — Rumah Commis" }] }),
   component: ArtistCommissions,
 });
