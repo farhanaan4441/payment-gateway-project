@@ -83,13 +83,16 @@ function CommissionDetail() {
         <div className="grid lg:grid-cols-[1fr_400px] gap-8">
           <div>
             <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary border border-border">
-              {data.cover_image_url ? (
-                <img src={data.cover_image_url} alt={data.title} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/40 to-primary/20">
-                  <Brush className="h-16 w-16 text-primary/50" />
-                </div>
-              )}
+              <SignedImage
+                path={data.cover_image_url}
+                alt={data.title}
+                className="w-full h-full object-cover"
+                fallback={
+                  <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/40 to-primary/20">
+                    <Brush className="h-16 w-16 text-primary/50" />
+                  </div>
+                }
+              />
             </div>
             {images.length > 0 && (
               <div className="grid grid-cols-4 gap-2 mt-3">
