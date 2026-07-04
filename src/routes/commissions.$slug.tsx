@@ -98,7 +98,7 @@ function CommissionDetail() {
             {images.length > 0 && (
               <div className="grid grid-cols-4 gap-2 mt-3">
                 {images.slice(0, 4).map((img: any, i: number) => (
-                  <img key={i} src={img.url} alt="" className="aspect-square rounded-lg object-cover border border-border" />
+                  <SignedImage key={i} path={img.url} alt="" className="aspect-square rounded-lg object-cover border border-border" />
                 ))}
               </div>
             )}
