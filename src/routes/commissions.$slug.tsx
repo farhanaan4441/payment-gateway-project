@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatIDR } from "@/lib/format";
 import { toast } from "sonner";
+import { SignedImage } from "@/components/signed-image";
 
 export const Route = createFileRoute("/commissions/$slug")({
   head: ({ params }) => ({ meta: [{ title: `${params.slug} — Komisi` }] }),
@@ -83,18 +84,21 @@ function CommissionDetail() {
         <div className="grid lg:grid-cols-[1fr_400px] gap-8">
           <div>
             <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary border border-border">
-              {data.cover_image_url ? (
-                <img src={data.cover_image_url} alt={data.title} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/40 to-primary/20">
-                  <Brush className="h-16 w-16 text-primary/50" />
-                </div>
-              )}
+              <SignedImage
+                path={data.cover_image_url}
+                alt={data.title}
+                className="w-full h-full object-cover"
+                fallback={
+                  <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/40 to-primary/20">
+                    <Brush className="h-16 w-16 text-primary/50" />
+                  </div>
+                }
+              />
             </div>
             {images.length > 0 && (
               <div className="grid grid-cols-4 gap-2 mt-3">
                 {images.slice(0, 4).map((img: any, i: number) => (
-                  <img key={i} src={img.url} alt="" className="aspect-square rounded-lg object-cover border border-border" />
+                  <SignedImage key={i} path={img.url} alt="" className="aspect-square rounded-lg object-cover border border-border" />
                 ))}
               </div>
             )}
