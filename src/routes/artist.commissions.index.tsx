@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { formatIDR } from "@/lib/format";
 import { Plus, Brush, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { SignedImage } from "@/components/signed-image";
 
 export const Route = createFileRoute("/artist/commissions/")({
   head: () => ({ meta: [{ title: "Kelola Komisi — Rumah Commis" }] }),
@@ -75,9 +76,12 @@ function ArtistCommissions() {
             {data.map((c: any) => (
               <div key={c.id} className="rounded-2xl border border-border bg-card overflow-hidden">
                 <div className="aspect-[4/3] bg-secondary">
-                  {c.cover_image_url ? <img src={c.cover_image_url} alt={c.title} className="w-full h-full object-cover" /> : (
-                    <div className="w-full h-full grid place-items-center"><Brush className="h-10 w-10 text-primary/40" /></div>
-                  )}
+                  <SignedImage
+                    path={c.cover_image_url}
+                    alt={c.title}
+                    className="w-full h-full object-cover"
+                    fallback={<div className="w-full h-full grid place-items-center"><Brush className="h-10 w-10 text-primary/40" /></div>}
+                  />
                 </div>
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-2">
