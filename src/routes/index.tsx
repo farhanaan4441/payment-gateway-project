@@ -5,6 +5,7 @@ import { SiteShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { formatIDR } from "@/lib/format";
+import { SignedImage } from "@/components/signed-image";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -207,13 +208,16 @@ export function CommissionCard({ c }: { c: any }) {
   return (
     <Link to="/commissions/$slug" params={{ slug: c.slug }} className="group">
       <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-secondary border border-border relative">
-        {c.cover_image_url ? (
-          <img src={c.cover_image_url} alt={c.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition" />
-        ) : (
-          <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/30 to-primary/20">
-            <Brush className="h-10 w-10 text-primary/60" />
-          </div>
-        )}
+        <SignedImage
+          path={c.cover_image_url}
+          alt={c.title}
+          className="w-full h-full object-cover group-hover:scale-[1.03] transition"
+          fallback={
+            <div className="w-full h-full grid place-items-center bg-gradient-to-br from-accent/30 to-primary/20">
+              <Brush className="h-10 w-10 text-primary/60" />
+            </div>
+          }
+        />
         <div className="absolute bottom-2 left-2 right-2 px-2 py-1 rounded-lg bg-background/90 backdrop-blur text-xs font-semibold">
           {formatIDR(c.base_price)} • {c.turnaround_days}h
         </div>
