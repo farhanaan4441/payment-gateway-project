@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { formatIDR } from "@/lib/format";
 import { toast } from "sonner";
+import { SignedImage } from "@/components/signed-image";
 
 export const Route = createFileRoute("/commissions/$slug")({
   head: ({ params }) => ({ meta: [{ title: `${params.slug} — Komisi` }] }),
