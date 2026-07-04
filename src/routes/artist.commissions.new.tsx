@@ -65,13 +65,12 @@ function NewCommission() {
       if (Number(basePrice) <= 0) throw new Error("Harga harus lebih dari 0");
       if (slots <= 0) throw new Error("Slot minimal 1");
       if (turnaround <= 0) throw new Error("Lama pengerjaan minimal 1 hari");
-      let coverUrl: string | null = null;
+      let coverPath: string | null = null;
       if (cover) {
         const path = `${user.id}/${Date.now()}-${cover.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
         const { error: upErr } = await supabase.storage.from("commission-images").upload(path, cover);
         if (upErr) throw upErr;
-        const { data: pub } = supabase.storage.from("commission-images").getPublicUrl(path);
-        coverUrl = pub.publicUrl;
+        coverPath = path;
       }
       const slug = `${slugify(title)}-${Math.random().toString(36).slice(2, 6)}`;
       const { data, error } = await supabase.from("commissions").insert({
@@ -83,7 +82,7 @@ function NewCommission() {
         base_price: Number(basePrice),
         turnaround_days: turnaround,
         slots_available: slots,
-        cover_image_url: coverUrl,
+        cover_image_url: coverPath,
       }).select().single();
       if (error) throw error;
       return data;
